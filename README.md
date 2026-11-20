@@ -7,6 +7,8 @@
 
 A data warehouse that combines sales data from two disconnected business systems (a CRM and an ERP), cleans it, and turns it into a star schema ready for analysis. It's built in PostgreSQL using the medallion architecture (bronze → silver → gold), runs end-to-end with one command, logs every run and tests its own output.
 
+![Sales overview page of the dashboard](docs/images/dashboard-overview.png)
+
 The whole pipeline, from raw CSV files to a tested star schema, runs in about 4 seconds:
 
 ```
@@ -182,6 +184,18 @@ An interactive [Streamlit](https://streamlit.io) dashboard reads directly from t
 | **Products** | Top subcategories, revenue by product line, estimated gross margin by category, top 20 products |
 | **Pipeline health** | Status and duration of the last run, success rate, row counts per layer compared with the previous run, step and run durations, full run history including failures |
 
+<p>
+  <img src="docs/images/dashboard-customers.png" width="49%" alt="Customers page: revenue by country, spend by age group, gender and marital status">
+  <img src="docs/images/dashboard-pipeline.png" width="49%" alt="Pipeline health page: last run status, rows per layer, step and run durations, run history">
+</p>
+
+<details>
+<summary>Products page</summary>
+
+![Products page: top subcategories, estimated gross margin by category, revenue by product line, top 20 products](docs/images/dashboard-products.png)
+
+</details>
+
 Filters for year, country and category apply to the three business pages. The star-schema join and the age calculations run in PostgreSQL ([`dashboard/data.py`](dashboard/data.py)); the dashboard only filters and groups the result.
 
 **Run it** (after the pipeline has been run at least once):
@@ -303,7 +317,8 @@ sql-data-warehouse-project/
 │   └── views/                       overview, customers, products, pipeline health
 ├── requirements.txt                 dashboard Python packages
 └── docs/
-    └── data_catalog.md              every gold column explained
+    ├── data_catalog.md              every gold column explained
+    └── images/                      dashboard screenshots
 ```
 
 ---

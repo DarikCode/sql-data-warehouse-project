@@ -75,7 +75,7 @@ with card("Top 20 products", "By revenue"):
         by_product.head(20)[["product_name", "category", "subcategory", "revenue", "units", "orders", "margin"]]
         .rename(columns={"product_name": "Product", "category": "Category", "subcategory": "Subcategory",
                          "revenue": "Revenue", "units": "Units", "orders": "Orders", "margin": "Est. margin"}),
-        hide_index=True, width="stretch",
+        hide_index=True, width="stretch", height=36 * 20 + 40,  # show all 20 rows, no inner scroll
         column_config={
             "Revenue": st.column_config.ProgressColumn(format="%d", min_value=0,
                                                        max_value=int(by_product["revenue"].max())),
