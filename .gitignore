@@ -1,0 +1,11 @@
+# Local secrets and editor files
+.env
+*.log
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
+
+# Python
+.venv/
+__pycache__/
