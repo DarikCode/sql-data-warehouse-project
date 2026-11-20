@@ -2,6 +2,7 @@
 
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
 ![PowerShell](https://img.shields.io/badge/PowerShell-5391FE?style=for-the-badge&logo=powershell&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Ildar_Mamin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ildar-mamin)
 
 A data warehouse that combines sales data from two disconnected business systems (a CRM and an ERP), cleans it, and turns it into a star schema ready for analysis. It's built in PostgreSQL using the medallion architecture (bronze → silver → gold), runs end-to-end with one command, logs every run and tests its own output.
@@ -170,6 +171,31 @@ Average spend per customer falls steadily with age, from 1,879 for customers und
 
 ---
 
+## Dashboard
+
+An interactive [Streamlit](https://streamlit.io) dashboard reads directly from the gold layer and the run log:
+
+| Page | What it shows |
+|---|---|
+| **Sales overview** | Revenue (with growth 2013 vs 2012), orders, customers, average order value, units; monthly revenue and buying customers, with the product-line launch marked; revenue by category |
+| **Customers** | Average and median spend, repeat-customer rate; revenue by country, spend by age group, customers by gender and marital status |
+| **Products** | Top subcategories, revenue by product line, estimated gross margin by category, top 20 products |
+| **Pipeline health** | Status and duration of the last run, success rate, row counts per layer compared with the previous run, step and run durations, full run history including failures |
+
+Filters for year, country and category apply to the three business pages. The star-schema join and the age calculations run in PostgreSQL ([`dashboard/data.py`](dashboard/data.py)); the dashboard only filters and groups the result.
+
+**Run it** (after the pipeline has been run at least once):
+
+```powershell
+python -m venv .venv
+.venv\Scripts\pip install -r requirements.txt
+.venv\Scripts\streamlit run dashboard/app.py
+```
+
+It opens at http://localhost:8501 and connects with the same settings as psql (`PGHOST`, `PGPORT`, `PGUSER`, and the password from pgpass or `PGPASSWORD`).
+
+---
+
 ## Built beyond the original course
 
 This project started from [Data With Baraa's SQL Server data warehouse course](https://github.com/DataWithBaraa/sql-data-warehouse-project). I rebuilt it in PostgreSQL and added the engineering a production pipeline needs:
@@ -270,6 +296,12 @@ sql-data-warehouse-project/
 ├── analysis/
 │   ├── 01_profile_bronze.sql        measures the problems in the raw data
 │   └── 02_business_questions.sql    questions answered from gold
+├── dashboard/
+│   ├── app.py                       Streamlit entry point and filters
+│   ├── data.py                      SQL queries against gold and the run log
+│   ├── charts.py                    shared chart styling
+│   └── views/                       overview, customers, products, pipeline health
+├── requirements.txt                 dashboard Python packages
 └── docs/
     └── data_catalog.md              every gold column explained
 ```
